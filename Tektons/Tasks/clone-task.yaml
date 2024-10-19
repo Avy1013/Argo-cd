@@ -1,0 +1,54 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: clone-and-list-files
+spec:
+  workspaces:
+    - name: output
+  params:
+    - name: repo-url
+      type: string
+  steps:
+    - name: cleanup
+      image: alpine
+      script: |
+        #!/usr/bin/env sh
+        set -eu
+        echo "Cleaning up workspace..."
+        rm -rf $(workspaces.output.path)/* $(workspaces.output.path)/.[!.]*
+    - name: clone
+      image: alpine/git
+      script: |
+        git clone $(params.repo-url) $(workspaces.output.path)
+    - name: list-files
+      image: alpine
+      script: |
+        ls -R $(workspaces.output.path)
+
+# ---
+# apiVersion: tekton.dev/v1beta1
+# kind: Task
+# metadata:
+#   name: clone-and-list-files
+# spec:
+#   workspaces:
+#     - name: source
+#   params:
+#     - name: repo-url
+#       type: string
+#   steps:
+#     - name: clone-repo
+#       image: alpine/git
+#       script: |
+#         git clone $(params.repo-url) $(workspaces.source.path)
+#     - name: list-files
+#       image: alpine/git
+#       script: |
+#         ls -R $(workspaces.source.path)
+
+
+
+
+
+
+        

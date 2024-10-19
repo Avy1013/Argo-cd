@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: clone-list-run
+spec:
+  taskRef:
+    name: clone-and-list-files   # Updated task name
+  workspaces:
+    - name: source               # Updated to match the workspace name in the merged task
+      emptyDir: {}               # Temporary directory to store the cloned repo
+  params:
+    - name: repo-url
+      value: https://github.com/Avy1013/Ruby-app-deployment-.git
